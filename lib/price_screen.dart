@@ -9,20 +9,20 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  Map<String, String> latestPrices = {'BTC': '?', 'ETH': '?', 'LTC': '?'};
   String selectedCurrency = 'USD';
-  String lastPrice = '?';
   CoinData coinData = CoinData();
 
   @override
   void initState() {
     super.initState();
-    setLastPrice();
+    getLatestPrices();
   }
 
-  void setLastPrice() async {
-    String last = await coinData.getCoinData();
+  void getLatestPrices() async {
+    Map<String, String> last = await coinData.getCoinData(selectedCurrency);
     setState(() {
-      lastPrice = last;
+      latestPrices = last;
     });
   }
 
@@ -43,7 +43,7 @@ class _PriceScreenState extends State<PriceScreen> {
         setState(() {
           selectedCurrency = value;
         });
-        setLastPrice();
+        getLatestPrices();
       },
     );
   }
@@ -61,7 +61,7 @@ class _PriceScreenState extends State<PriceScreen> {
         setState(() {
           selectedCurrency = currenciesList[selectedIndex];
         });
-        setLastPrice();
+        getLatestPrices();
       },
       children: pickerItems,
     );
@@ -88,7 +88,49 @@ class _PriceScreenState extends State<PriceScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
                 child: Text(
-                  '1 BTC = $lastPrice $selectedCurrency',
+                  '1 BTC = ${latestPrices['BTC']} $selectedCurrency',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+            child: Card(
+              color: Colors.lightBlueAccent,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                child: Text(
+                  '1 ETH = ${latestPrices['ETH']} $selectedCurrency',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
+            child: Card(
+              color: Colors.lightBlueAccent,
+              elevation: 5.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+                child: Text(
+                  '1 LTC = ${latestPrices['LTC']} $selectedCurrency',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,

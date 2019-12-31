@@ -32,13 +32,17 @@ const List<String> cryptoList = [
 ];
 
 class CoinData {
-  Future<String> getCoinData({String currency = 'USD'}) async {
-    var response = await http.get('https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC$currency');
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['last'].toString();
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-      return 'Error: could not get data.';
+  Future<Map<String, String>> getCoinData(String selectedCurrency) async {
+    Map<String, String> updatedLatestPrices = {};
+    for (String crypto in cryptoList) {
+      var response = await http.get('https://apiv2.bitcoinaverage.com/indices/global/ticker/$crypto$selectedCurrency');
+      if (response.statusCode == 200) {
+        updatedLatestPrices[crypto] = jsonDecode(response.body)['last'].toString();
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+        updatedLatestPrices[crypto] = '😵';
+      }
     }
+    return updatedLatestPrices;
   }
 }
